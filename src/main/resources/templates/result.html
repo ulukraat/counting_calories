@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты расчёта питания</title>
+    <link rel="stylesheet" href="/styleforresult.css">
+</head>
+<body>
+<h1>Результаты питания для вас: </h1>
+
+<div class="nutrition-card">
+    <h2>Рекомендуемое питание в день</h2>
+    <table class="nutrition-table">
+        <thead>
+        <tr>
+            <th>Показатель</th>
+            <th>Значение</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Калории</td>
+            <td th:text="${nutrition.calories}">0</td>
+        </tr>
+        <tr>
+            <td>Жиры</td>
+            <td th:text="${T(java.lang.Math).round(nutrition.fat)} + ' г'"></td>
+        </tr>
+        <tr>
+            <td>Белки</td>
+            <td th:text="${T(java.lang.Math).round(nutrition.protein)} + ' г'"></td>
+        </tr>
+        <tr>
+            <td>Углеводы</td>
+            <td th:text="${T(java.lang.Math).round(nutrition.carb)} + ' г'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<a href="/welcome" class="back-link">Назад</a>
+</body>
+</html>
+

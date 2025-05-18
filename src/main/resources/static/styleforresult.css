@@ -1,0 +1,59 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f9f9;
+    margin: 30px;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.nutrition-card {
+    max-width: 500px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.nutrition-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2980b9;
+}
+
+.nutrition-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.nutrition-table th, .nutrition-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.nutrition-table th {
+    background-color: #2980b9;
+    color: white;
+}
+
+.nutrition-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+    text-decoration: none;
+    color: #2980b9;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
