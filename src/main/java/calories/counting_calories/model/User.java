@@ -16,13 +16,14 @@ public class User {
     private String username;
     @Column(nullable = false)
     private double weight;
+    @Column(nullable = false)
+    private int password;
 
-    @OneToMany
-    private List<Nutrition> nutritionList;
 
-    public User(String username, double weight) {
+    public User(String username, double weight, int password) {
         this.username = username;
         this.weight = weight;
+        this.password = password;
     }
     public User() {}
 }

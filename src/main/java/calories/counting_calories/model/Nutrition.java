@@ -3,6 +3,8 @@ package calories.counting_calories.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.PrintWriter;
+
 @Data
 @Entity
 @Table(name = "nutritional_value")
@@ -28,6 +30,8 @@ public class Nutrition {
     public Nutrition() {}
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
+
+
 }

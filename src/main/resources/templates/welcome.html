@@ -16,12 +16,23 @@
     <input type="text" id="username" name="username" required>
 
     <label for="weight">Вес:</label>
-    <input type="number" step="0.01" id="weight" name="weight" required>
+    <input type="number" step="0.01" id = "weight"  name="weight" required>
+
+    <label for = "password">Придумайте пароль:</label>
+    <input type = "number" name = "password" id = "password" required oninput="this.value = this.value.slice(0, 8)">
 
 
     <button type="submit">Продолжить</button>
 
   </form>
+  <p style="color: red;">
+    <span th:text="${errorMessage}"></span> <!-- если используешь Thymeleaf -->
+  </p>
+
+
+  <p>
+    Уже есть аккаунт? <a href="/login" style="color: #007bff; text-decoration: none;">Войти</a>
+  </p>
 
 </div>
 </body>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логин</title>
+    <link rel="stylesheet" href="/styleforwelcome.css">
+</head>
+<body>
+<div class="container">
+    <p>Заполни профиль для того чтобы войти в аккаунт</p>
+
+    <form  action="/login" method="POST">
+        <label for="username">Имя:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for = "password">Придумайте пароль:</label>
+        <input type = "number" name = "password" id = "password" required oninput="this.value = this.value.slice(0, 8)">
+
+
+        <button type="submit">Продолжить</button>
+
+    </form>
+    <p style="color: red;">
+        <span th:text="${errorMessage}"></span> <!-- если используешь Thymeleaf -->
+    </p>
+
+
+</div>
+</body>
+</html>

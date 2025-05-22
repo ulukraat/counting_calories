@@ -2,6 +2,7 @@ package calories.counting_calories.controller;
 
 import calories.counting_calories.model.Nutrition;
 import calories.counting_calories.model.User;
+import calories.counting_calories.repository.NutritionRepository;
 import calories.counting_calories.repository.UserRepository;
 import calories.counting_calories.service.NutritionService;
 import calories.counting_calories.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class    NutritionController {
+    private NutritionRepository nutritionRepository;
     private final NutritionService nutritionService;
     private final UserRepository userRepository;
     private final UserService userService;

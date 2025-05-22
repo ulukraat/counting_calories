@@ -17,16 +17,17 @@ public class NutritionService {
         this.nutritionRepository = nutritionRepository;
         this.userRepository = userRepository;
     }
-    public List<Nutrition> showNutrition(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден!"));
+        public List<Nutrition> showNutrition(Long userId) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден!"));
+            List<Nutrition> nutritionList = nutritionRepository.findByUser(user);
 
-        if (user.getNutritionList().isEmpty()) {
-            throw new RuntimeException("Данные по питанию отсутствуют!");
+            if (nutritionList.isEmpty()) {
+                throw new RuntimeException("Данные по питанию отсутствуют!");
+            }
+
+            return nutritionList; // ⬅️ Возвращаем весь список!
         }
-
-        return user.getNutritionList(); // ⬅️ Возвращаем весь список!
-    }
 
 
     public Nutrition weightLoss(User user) {
@@ -37,26 +38,8 @@ public class NutritionService {
         double doubleCalories = ((carb * 4) + (protein * 4) + (fat * 9));
         int calories = ((int) doubleCalories);
         Nutrition nutrition = new Nutrition(calories,fat,protein,carb);
+        nutrition.setUser(user);
         return nutritionRepository.save(nutrition);
     }
-    public Nutrition remainingNutrition(Long userId, double eatenProteins, double eatenFats, double eatenCarbs) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден!"));
-
-        List<Nutrition> nutritionList = user.getNutritionList();
-
-        if (nutritionList.isEmpty()) {
-            throw new RuntimeException("Данных о питании нет!");
-        }
-
-        Nutrition latestNutrition = nutritionList.get(nutritionList.size() - 1); // Берём последнюю запись
-
-        double remainingProteins = Math.max(latestNutrition.getProtein() - eatenProteins, 0);
-        double remainingFats = Math.max(latestNutrition.getFat() - eatenFats, 0);
-        double remainingCarbs = Math.max(latestNutrition.getCarb() - eatenCarbs, 0);
-
-        return new Nutrition(latestNutrition.getCalories(), remainingProteins, remainingFats, remainingCarbs);
-    }
-
 
 }
