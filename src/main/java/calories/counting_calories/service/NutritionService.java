@@ -42,4 +42,16 @@ public class NutritionService {
         return nutritionRepository.save(nutrition);
     }
 
+    public Nutrition weightGain(User user) {
+        double weight = user.getWeight();
+        double fat  = weight * 0.5;
+        double protein = weight * 2;
+        double carb = weight * 5;
+        double doubleCalories = ((carb * 4) + (protein * 4)) + (fat * 9);
+        int calories = ((int) doubleCalories);
+        Nutrition nutrition = new Nutrition(calories,fat,protein,carb);
+        nutrition.setUser(user);
+        return nutritionRepository.save(nutrition);
+    }
+
 }

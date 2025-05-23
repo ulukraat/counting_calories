@@ -26,8 +26,8 @@ public class    NutritionController {
         this.userService = userService;
     }
 
-    @GetMapping("/result")
-    public String showCalories(@RequestParam Long userId, Model model) {
+    @GetMapping("/weight/loss")
+    public String showLossCalories(@RequestParam Long userId, Model model) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
@@ -36,7 +36,19 @@ public class    NutritionController {
         model.addAttribute("user",user);
         model.addAttribute("nutrition",nutrition);
 
-        return "result";
+        return "result-loss";
 
+    }
+    @GetMapping("/weight/gain")
+    public String showGainCalories(@RequestParam Long userId, Model model) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        Nutrition nutrition = nutritionService.weightGain(user);
+
+        model.addAttribute("user",user);
+        model.addAttribute("nutrition",nutrition);
+
+        return "result-gain";
     }
 }

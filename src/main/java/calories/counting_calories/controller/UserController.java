@@ -37,13 +37,14 @@ public class UserController {
         }
 
         System.out.println("savedUser ID: " + savedUser.getId()); // <= ДОБАВЬ ЭТО
-        return "redirect:/result?userId=" + savedUser.getId();
+        return "redirect:/profile?userId=" + savedUser.getId();
     }
+
     @PostMapping("/login")
     public String login(@ModelAttribute User user, Model model) {
         Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
         if (foundUser.isPresent()) {
-            return "redirect:/result?userId=" + foundUser.get().getId();
+            return "redirect:/profile?userId=" + foundUser.get().getId();
         }
         model.addAttribute("errorMessage","Такого аккаунта нет");
         return "login";
@@ -52,5 +53,30 @@ public class UserController {
     public String showLogin() {
         return "login";
     }
+
+    @PostMapping("/profile/goal")
+    public String showWeightLoss(@RequestParam Long userId, @RequestParam String goal ) {
+        if("loss".equals(goal)) {
+            System.out.println("Снижения веса");
+            return "redirect:/weight/loss?userId=" + userId;
+
+        }
+        else if ("gain".equals(goal)) {
+            System.out.println("Набор веса");
+            return "redirect:/weight/gain?userId=" + userId;
+        }
+        else {
+            return "redirect:/profile?userId=" + userId;
+        }
+    }
+
+
+    @GetMapping("/profile")
+    public String showProfile(@RequestParam Long userId, Model model) {
+        model.addAttribute("userId", userId);
+        return "profile";
+    }
+
+
 
 }
