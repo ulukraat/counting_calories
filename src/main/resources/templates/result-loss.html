@@ -1,44 +1,278 @@
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результаты расчёта питания для похудения</title>
-    <link rel="stylesheet" href="/styleforresult.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 30px;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nutrition-card {
+            background: white;
+            margin: 30px auto;
+            max-width: 700px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nutrition-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .nutrition-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nutrition-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .nutrition-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 1rem;
+        }
+
+        .nutrition-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .nutrition-table tbody tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+        }
+
+        .nutrition-form {
+            background: white;
+            margin: 30px auto;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            min-width: 120px;
+        }
+
+        .form-input {
+            width: 140px;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+            transform: scale(1.02);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        /* Анимации */
+        .nutrition-card, .nutrition-form {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .nutrition-card, .nutrition-form {
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .form-input {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Результаты питания для вас: </h1>
+<main class="container">
+    <h1>Результаты питания для вас</h1>
 
-<div class="nutrition-card">
-    <h2>Рекомендуемое питание в день</h2>
+    <section class="nutrition-card">
+    <h2>Дневная норма питания</h2>
     <table class="nutrition-table">
         <thead>
         <tr>
             <th>Показатель</th>
-            <th>Значение</th>
+            <th class="norm">Дневная норма</th>
+            <th class="consumed">Съедено</th>
+            <th class="remaining">Остается</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>Калории</td>
-            <td th:text="${nutrition.calories}">0</td>
+            <td class="norm" th:text="${dailyNorm.calories} + ' ккал'">0 ккал</td>
+            <td class="consumed" th:text="${T(java.lang.Math).round((consumedNutrition.fat * 9) + (consumedNutrition.protein * 4) + (consumedNutrition.carb * 4))} + ' ккал'">0 ккал</td>
+            <td class="remaining" th:text="${remainingNutrition.calories} + ' ккал'">0 ккал</td>
         </tr>
         <tr>
             <td>Жиры</td>
-            <td th:text="${T(java.lang.Math).round(nutrition.fat)} + ' г'"></td>
+            <td class="norm" th:text="${T(java.lang.Math).round(dailyNorm.fat)} + ' г'">0 г</td>
+            <td class="consumed" th:text="${T(java.lang.Math).round(consumedNutrition.fat)} + ' г'">0 г</td>
+            <td class="remaining" th:text="${T(java.lang.Math).round(remainingNutrition.fat)} + ' г'">0 г</td>
         </tr>
         <tr>
             <td>Белки</td>
-            <td th:text="${T(java.lang.Math).round(nutrition.protein)} + ' г'"></td>
+            <td class="norm" th:text="${T(java.lang.Math).round(dailyNorm.protein)} + ' г'">0 г</td>
+            <td class="consumed" th:text="${T(java.lang.Math).round(consumedNutrition.protein)} + ' г'">0 г</td>
+            <td class="remaining" th:text="${T(java.lang.Math).round(remainingNutrition.protein)} + ' г'">0 г</td>
         </tr>
         <tr>
             <td>Углеводы</td>
-            <td th:text="${T(java.lang.Math).round(nutrition.carb)} + ' г'"></td>
+            <td class="norm" th:text="${T(java.lang.Math).round(dailyNorm.carb)} + ' г'">0 г</td>
+            <td class="consumed" th:text="${T(java.lang.Math).round(consumedNutrition.carb)} + ' г'">0 г</td>
+            <td class="remaining" th:text="${T(java.lang.Math).round(remainingNutrition.carb)} + ' г'">0 г</td>
         </tr>
         </tbody>
     </table>
-</div>
+    </section>
 
-<a href="/welcome" class="back-link">Назад</a>
+    <form action="/weight/loss" method="post" class="nutrition-form">
+        <h3>Введите количество съеденного:</h3>
+        <input type="hidden" name="userId" th:value="${user.id}"/>
+        <div class="form-group">
+            <label for="fat">Жиры (г):</label>
+            <input type="number" step="0.1" name="fat" id="fat" value="0" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="protein">Белки (г):</label>
+            <input type="number" step="0.1" name="protein" id="protein" value="0" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="carb">Углеводы (г):</label>
+            <input type="number" step="0.1" name="carb" id="carb" value="0" required class="form-input">
+        </div>
+        <button type="submit" class="btn-submit">Пересчитать остаток</button>
+    </form>
+
+    <a th:href="@{/login}" class="back-link">Назад в личный кабинет</a>
+</main>
 </body>
 </html>
-

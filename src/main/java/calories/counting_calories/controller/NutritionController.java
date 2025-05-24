@@ -31,14 +31,50 @@ public class    NutritionController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
-        Nutrition nutrition = nutritionService.weightLoss(user);
+        // Получаем дневную норму
+        Nutrition dailyNorm = nutritionService.weightLoss(user);
 
-        model.addAttribute("user",user);
-        model.addAttribute("nutrition",nutrition);
+        // Создаем пустые значения для первого отображения
+        Nutrition consumedNutrition = new Nutrition(0, 0.0, 0.0, 0.0);
+        Nutrition remainingNutrition = dailyNorm; // изначально остается вся норма
+
+        model.addAttribute("user", user);
+        model.addAttribute("dailyNorm", dailyNorm);
+        model.addAttribute("consumedNutrition", consumedNutrition);
+        model.addAttribute("remainingNutrition", remainingNutrition);
 
         return "result-loss";
-
     }
+
+    @PostMapping("/weight/loss")
+    public String countingCalories(
+            @RequestParam Long userId,
+            @RequestParam double fat,
+            @RequestParam double protein,
+            @RequestParam double carb,
+            Model model
+    ) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        // Это то, что пользователь уже съел
+        Nutrition consumedNutrition = new Nutrition(0, fat, protein, carb);
+
+        // Получаем остаток от дневной нормы
+        Nutrition remainingNutrition = nutritionService.weightLossCount(userId, consumedNutrition);
+
+        // Получаем дневную норму для отображения
+        Nutrition dailyNorm = nutritionService.weightLoss(user);
+
+        model.addAttribute("user", user);
+        model.addAttribute("consumedNutrition", consumedNutrition); // съеденное
+        model.addAttribute("remainingNutrition", remainingNutrition); // остаток
+        model.addAttribute("dailyNorm", dailyNorm); // дневная норма
+
+        return "result-loss";
+    }
+
+
     @GetMapping("/weight/gain")
     public String showGainCalories(@RequestParam Long userId, Model model) {
         User user = userRepository.findById(userId)
@@ -51,4 +87,5 @@ public class    NutritionController {
 
         return "result-gain";
     }
+
 }
