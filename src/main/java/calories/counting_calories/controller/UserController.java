@@ -77,6 +77,10 @@ public class UserController {
         return "profile";
     }
 
-
+    @PostMapping("/weight/recalculate")
+    public String showWeightLoss(@RequestParam Long userId, @RequestParam  double weight, Model model) {
+        userService.updateUser(userId, weight);
+        return "redirect:/weight/loss?userId=" + userId;
+    }
 
 }

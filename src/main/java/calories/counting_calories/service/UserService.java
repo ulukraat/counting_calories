@@ -20,6 +20,16 @@ public class UserService {
         System.out.println("Этот пользователь уже есть ты че ебень ");
         return null;
     }
+    public User updateUser(Long userId, double weight) {
+        Optional<User> existingUser = userRepository.findById(userId);
+        if(existingUser.isPresent()) {
+            User user = existingUser.get();
+            user.setWeight(weight);
+            return userRepository.save(user);
+        }   else{
+            throw new RuntimeException("User not found");
+        }
+    }
 
 
 }

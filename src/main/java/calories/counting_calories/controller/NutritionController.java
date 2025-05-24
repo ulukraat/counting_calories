@@ -85,7 +85,7 @@ public class    NutritionController {
         model.addAttribute("user",user);
         model.addAttribute("nutrition",nutrition);
 
-        return "result-gain";
+        return "result-loss";
     }
 
 }
