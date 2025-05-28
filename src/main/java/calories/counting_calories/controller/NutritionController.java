@@ -1,5 +1,6 @@
 package calories.counting_calories.controller;
 
+import calories.counting_calories.model.DailyNutritionRemaining;
 import calories.counting_calories.model.Nutrition;
 import calories.counting_calories.model.User;
 import calories.counting_calories.repository.NutritionRepository;
@@ -31,12 +32,11 @@ public class    NutritionController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
-        // Получаем дневную норму
+
         Nutrition dailyNorm = nutritionService.weightLoss(user);
 
-        // Создаем пустые значения для первого отображения
         Nutrition consumedNutrition = new Nutrition(0, 0.0, 0.0, 0.0);
-        Nutrition remainingNutrition = dailyNorm; // изначально остается вся норма
+        Nutrition remainingNutrition = dailyNorm;
 
         model.addAttribute("user", user);
         model.addAttribute("dailyNorm", dailyNorm);
@@ -57,13 +57,10 @@ public class    NutritionController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
-        // Это то, что пользователь уже съел
         Nutrition consumedNutrition = new Nutrition(0, fat, protein, carb);
 
-        // Получаем остаток от дневной нормы
         Nutrition remainingNutrition = nutritionService.weightLossCount(userId, consumedNutrition);
 
-        // Получаем дневную норму для отображения
         Nutrition dailyNorm = nutritionService.weightLoss(user);
 
         model.addAttribute("user", user);

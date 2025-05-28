@@ -18,9 +18,11 @@ public class User {
     private double weight;
     @Column(nullable = false)
     private int password;
+    @Column
+    private String goal;
 
 
-    public User(String username, double weight, int password) {
+    public User(String username, double weight, int password, String goal) {
         this.username = username;
         this.weight = weight;
         this.password = password;
