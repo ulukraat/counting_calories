@@ -21,6 +21,15 @@ public class NutritionService {
     private final NutritionRepository nutritionRepository;
     @Autowired
     private DailyNutritionRemainingRepository dailyRemainingRepository;
+    private final double PROTEINTCOUNTFORLOSS = 1.5;
+    private final double FATCOUNTFORLOSS = 0.5;
+    private final double CARBCOUNTFORLOSS = 3;
+    private final double PROTEININTTOCALORIES = 4;
+    private final double FATINTTOCALORIES = 9;
+    private final double CARBINTTOCALORIES = 4;
+    private final double PROTEINCOUNTFORGAIN = 2;
+    private final double FATCOUNTFORGAIN = 0.75;
+    private final double CARBCOUNTFORGAIN = 5;
 
     public NutritionService(NutritionRepository nutritionRepository, UserRepository userRepository) {
         this.nutritionRepository = nutritionRepository;
@@ -29,23 +38,19 @@ public class NutritionService {
 
 
     public Nutrition weightLoss(User user) {
-        // Рассчитываем новые значения на основе текущего веса
         double weight = user.getWeight();
-        double fat = weight * 0.5;
-        double protein = weight * 1.5;
-        double carb = weight * 3;
-        double currentCalories = ((carb * 4) + (protein * 4) + (fat * 9));
+        double fat = weight * FATCOUNTFORLOSS;
+        double protein = weight * PROTEINTCOUNTFORLOSS;
+        double carb = weight * CARBCOUNTFORLOSS;
+        double currentCalories = ((carb * CARBINTTOCALORIES) + (protein * PROTEININTTOCALORIES) + (fat * FATINTTOCALORIES));
         int calories = (int) currentCalories;
 
-        // Получаем все записи пользователя
         List<Nutrition> existingNutritions = nutritionRepository.findAllByUserId(user.getId());
 
         if (!existingNutritions.isEmpty()) {
-            // Удаляем все старые записи
             nutritionRepository.deleteAll(existingNutritions);
         }
 
-        // Создаем новую единственную запись
         Nutrition nutrition = new Nutrition(calories, fat, protein, carb);
         nutrition.setUser(user);
 
@@ -54,10 +59,10 @@ public class NutritionService {
 
     public Nutrition weightGain(User user) {
         double weight = user.getWeight();
-        double fat  = weight * 0.5;
-        double protein = weight * 2;
-        double carb = weight * 5;
-        double currentCalories = ((carb * 4) + (protein * 4)) + (fat * 9);
+        double fat  = weight * FATCOUNTFORGAIN;
+        double protein = weight * PROTEINCOUNTFORGAIN;
+        double carb = weight * CARBCOUNTFORGAIN;
+        double currentCalories = ((carb * CARBINTTOCALORIES) + (protein * PROTEININTTOCALORIES)) + (fat * FATINTTOCALORIES);
         int calories = ((int) currentCalories);
         Nutrition nutrition = new Nutrition(calories,fat,protein,carb);
         nutrition.setUser(user);
@@ -89,20 +94,18 @@ public class NutritionService {
             dailyRemaining = remainingOpt.get();
         }
 
-        // Вычисляем новые остатки
         double newRemainingFat = Math.max(0, dailyRemaining.getRemainingFat() - consumedNutrition.getFat());
         double newRemainingProtein = Math.max(0, dailyRemaining.getRemainingProtein() - consumedNutrition.getProtein());
         double newRemainingCarb = Math.max(0, dailyRemaining.getRemainingCarb() - consumedNutrition.getCarb());
         double newRemainingCalories = (newRemainingFat * 9) + (newRemainingProtein * 4) + (newRemainingCarb * 4);
 
-        // Обновляем остатки в базе
         dailyRemaining.setRemainingFat(newRemainingFat);
         dailyRemaining.setRemainingProtein(newRemainingProtein);
         dailyRemaining.setRemainingCarb(newRemainingCarb);
         dailyRemaining.setRemainingCalories((int) newRemainingCalories);
         dailyRemainingRepository.save(dailyRemaining);
 
-        // Возвращаем объект Nutrition с остатками (НЕ сохраняем в базу)
+
         Nutrition resultNutrition = new Nutrition((int) newRemainingCalories, newRemainingFat, newRemainingProtein, newRemainingCarb);
         resultNutrition.setUser(user);
 
